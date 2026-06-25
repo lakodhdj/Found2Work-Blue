@@ -56,11 +56,14 @@ function LandingPage({ onOpenAuth }) {
               <div key={vacancy.id} className="landing-vacancy-card">
                 <h3>{vacancy.title}</h3>
                 <p className="company">{vacancy.company}</p>
+                <div className={`job-salary-badge ${vacancy.salary ? '' : 'is-empty'}`}>
+                  <span className="job-salary-label">Зарплата</span>
+                  <span className="job-salary-value">{vacancy.salary || 'Не указана'}</span>
+                </div>
                 <p className="description">{vacancy.description}</p>
                 <div className="meta">
                   <span>{vacancy.location}</span>
                   <span>{vacancy.type}</span>
-                  <span>{vacancy.salary}</span>
                 </div>
                 <button className="hero-btn primary small" onClick={() => onOpenAuth('register')}>
                   Отправить заявку

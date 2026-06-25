@@ -332,9 +332,13 @@ function UserDashboard({ user }) {
             return (
             <div key={job.id} className="job-card">
               <div className="job-header">
-                <div>
+                <div className="job-header-main">
                   <h3 className="job-title">{job.title}</h3>
                   <p className="job-company">{job.company}</p>
+                  <div className={`job-salary-badge ${job.salary ? '' : 'is-empty'}`}>
+                    <span className="job-salary-label">Зарплата</span>
+                    <span className="job-salary-value">{job.salary || 'Не указана'}</span>
+                  </div>
                 </div>
                 <button
                   className={`save-btn ${savedJobs.includes(job.id) ? 'saved' : ''}`}
@@ -365,7 +369,6 @@ function UserDashboard({ user }) {
               </ul>
 
               <div className="job-meta">
-                <span className="meta-item meta-item-salary">{job.salary || 'Зарплата не указана'}</span>
                 <span className="meta-item">{job.location}</span>
                 <span className="meta-item">{employmentTypeLabels[job.type] || job.type}</span>
               </div>

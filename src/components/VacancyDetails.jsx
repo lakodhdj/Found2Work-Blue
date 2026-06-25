@@ -189,9 +189,9 @@ function VacancyDetails({
               </div>
 
               <div className="vacancy-meta-full">
-                <div className="meta-box">
+                <div className="meta-box meta-box-salary">
                   <span className="meta-label">Зарплата</span>
-                  <span className="meta-value">{vacancy.salary}</span>
+                  <span className="meta-value">{vacancy.salary || 'Не указана'}</span>
                 </div>
                 <div className="meta-box">
                   <span className="meta-label">Локация</span>

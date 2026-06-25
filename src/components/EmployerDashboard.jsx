@@ -329,11 +329,14 @@ function EmployerDashboard({ user, onRefreshData }) {
       <div className="vacancies-list">
         {vacancies.length > 0 ? (
           vacancies.map(vacancy => (
-            <div key={vacancy.id} className="vacancy-card">
+              <div key={vacancy.id} className="vacancy-card">
               <div className="vacancy-header">
-                <div>
+                <div className="job-header-main">
                   <h4 className="vacancy-title">{vacancy.title}</h4>
-                  <p className="vacancy-salary">{vacancy.salary}</p>
+                  <div className={`job-salary-badge ${vacancy.salary ? '' : 'is-empty'}`}>
+                    <span className="job-salary-label">Зарплата</span>
+                    <span className="job-salary-value">{vacancy.salary || 'Не указана'}</span>
+                  </div>
                 </div>
                 <span className={`status-badge ${vacancy.status.toLowerCase()}`}>
                   {moderationLabel(vacancy)}
