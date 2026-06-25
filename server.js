@@ -892,7 +892,8 @@ app.get('/api/messages/conversations/:userId', async (req, res) => {
         CASE WHEN m.senderId = ? THEN m.receiverId ELSE m.senderId END AS partnerId,
         u.name AS partnerName,
         u.email AS partnerEmail,
-        v.title AS vacancyTitle
+        v.title AS vacancyTitle,
+        v.company AS vacancyCompany
       FROM user_msgs m
       INNER JOIN thread_last tl ON m.id = tl.lastId
       LEFT JOIN users u ON u.id = CASE WHEN m.senderId = ? THEN m.receiverId ELSE m.senderId END

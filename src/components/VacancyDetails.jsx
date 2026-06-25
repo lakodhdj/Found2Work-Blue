@@ -292,7 +292,8 @@ function VacancyDetails({
                           partnerId: Number(vacancy.employerId),
                           partnerName: vacancy.company,
                           vacancyId: Number(vacancy.id),
-                          vacancyTitle: vacancy.title
+                          vacancyTitle: vacancy.title,
+                          vacancyCompany: vacancy.company
                         })}
                       >
                         Написать работодателю

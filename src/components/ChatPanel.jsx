@@ -111,6 +111,12 @@ function ChatPanel({ user, preselectedConversation = null, onClose }) {
     if (norm) loadThread(norm)
   }
 
+  const isSeeker = user?.type === 'user' || user?.type === 'seeker'
+
+  const selectedVacancyLabel = selected?.vacancyTitle || null
+  const selectedCompanyLabel =
+    selected?.vacancyCompany || selected?.partnerName || selected?.partnerEmail || null
+
   return (
     <div className="modal-overlay" role="presentation" onClick={onClose}>
       <div
@@ -121,7 +127,16 @@ function ChatPanel({ user, preselectedConversation = null, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <h3>Сообщения</h3>
+          <div className="chat-header-text">
+            <h3>Сообщения</h3>
+            {isSeeker && selected && (
+              <p className="chat-header-subtitle">
+                {selectedVacancyLabel
+                  ? `Переписка по вакансии «${selectedVacancyLabel}»`
+                  : `Диалог с ${selected.partnerName || selected.partnerEmail || 'работодателем'}`}
+              </p>
+            )}
+          </div>
           <button type="button" className="chat-close-btn" onClick={onClose} aria-label="Закрыть чат">
             ×
           </button>
@@ -141,7 +156,15 @@ function ChatPanel({ user, preselectedConversation = null, onClose }) {
                   <p>
                     <strong>{item.partnerName || item.partnerEmail || `Пользователь #${item.partnerId}`}</strong>
                   </p>
-                  <p className="app-message">{item.vacancyTitle || 'Общий диалог'}</p>
+                  {isSeeker ? (
+                    item.vacancyTitle ? (
+                      <p className="chat-vacancy-chip">Вакансия: {item.vacancyTitle}</p>
+                    ) : (
+                      <p className="chat-vacancy-chip chat-vacancy-chip--general">Общий диалог</p>
+                    )
+                  ) : (
+                    <p className="app-message">{item.vacancyTitle || 'Общий диалог'}</p>
+                  )}
                   <p className="app-date">{new Date(item.createdAt).toLocaleString('ru-RU')}</p>
                 </button>
               )
@@ -150,6 +173,15 @@ function ChatPanel({ user, preselectedConversation = null, onClose }) {
           </div>
 
           <div className="chat-thread-wrap">
+            {isSeeker && selected && selectedVacancyLabel && (
+              <div className="chat-vacancy-banner">
+                <span className="chat-vacancy-banner-label">Вы пишете по вакансии</span>
+                <strong className="chat-vacancy-banner-title">{selectedVacancyLabel}</strong>
+                {selectedCompanyLabel && (
+                  <span className="chat-vacancy-banner-company">{selectedCompanyLabel}</span>
+                )}
+              </div>
+            )}
             <div ref={threadRef} className="applications-list chat-thread">
               {!selected && <p className="chat-empty">Выберите диалог слева или откройте чат из вакансии.</p>}
               {selected &&
@@ -172,7 +204,13 @@ function ChatPanel({ user, preselectedConversation = null, onClose }) {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder={selected ? 'Введите сообщение…' : 'Сначала выберите диалог'}
+                placeholder={
+                  selected
+                    ? selectedVacancyLabel
+                      ? `Сообщение по вакансии «${selectedVacancyLabel}»…`
+                      : 'Введите сообщение…'
+                    : 'Сначала выберите диалог'
+                }
                 className="search-input"
                 rows={2}
                 disabled={!selected}

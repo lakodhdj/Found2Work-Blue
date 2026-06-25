@@ -111,6 +111,11 @@ function Login({ onLogin, initialMode = 'login', onBack, showHero = true }) {
       {showHero && <MarketingHero />}
       <div className="login-container">
       <div className="login-card" id="auth-form">
+        {onBack && (
+          <button type="button" className="auth-back-btn" onClick={onBack}>
+            ← Назад
+          </button>
+        )}
         <div className="login-header">
           <h1 className="login-logo">Вход и регистрация</h1>
           <p className="login-subtitle">Платформа для поиска работы и публикации вакансий</p>
@@ -155,12 +160,6 @@ function Login({ onLogin, initialMode = 'login', onBack, showHero = true }) {
                   setSuccess('')
                 }} className="signup-link">Зарегистрируйтесь</button>
               </p>
-              {onBack && (
-                <p className="signup-hint">
-                  <button type="button" className="signup-link" onClick={onBack}>Вернуться на главную</button>
-                </p>
-              )}
-
             </form>
 
             <div className="demo-credentials">
@@ -279,11 +278,6 @@ function Login({ onLogin, initialMode = 'login', onBack, showHero = true }) {
                   setName('')
                 }} className="signup-link">Войдите</button>
               </p>
-              {onBack && (
-                <p className="signup-hint">
-                  <button type="button" className="signup-link" onClick={onBack}>Вернуться на главную</button>
-                </p>
-              )}
             </form>
           </>
         )}
