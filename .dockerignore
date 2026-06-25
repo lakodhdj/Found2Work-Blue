@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+*.md
+.env
+.env.*
+!.env.example
+.cursor
+terminals
+npm-debug.log*
+data.db
+data/

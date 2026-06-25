@@ -1,0 +1,94 @@
+@startuml er-found2work
+skinparam backgroundColor #FEFEFE
+skinparam roundcorner 10
+
+title Рисунок 8 - ER-диаграмма Found2Work (SQLite)\nключи и связи; полный список полей см. в параграфе 2.1
+
+' В SQLite: messages.text; vacancyId и reportedUser могут быть NULL.
+
+entity users {
+  * id : INTEGER <<PK>>
+  --
+  email <<UK>>
+  password, name, type
+  профиль, резюме, blocked, createdAt
+}
+
+entity vacancies {
+  * id : INTEGER <<PK>>
+  --
+  employerId : INTEGER <<FK users>>
+  title, company, salary, location
+  status, moderationStatus
+}
+
+entity applications {
+  * id : INTEGER <<PK>>
+  --
+  userId : INTEGER <<FK users>>
+  vacancyId : INTEGER <<FK vacancies>>
+  coverLetter, status
+}
+
+entity messages {
+  * id : INTEGER <<PK>>
+  --
+  senderId : INTEGER <<FK users>>
+  receiverId : INTEGER <<FK users>>
+  vacancyId : INTEGER <<FK vacancies>>
+  body : TEXT
+  createdAt
+}
+
+entity saved_jobs {
+  * id : INTEGER <<PK>>
+  --
+  userId : INTEGER <<FK users>>
+  vacancyId : INTEGER <<FK vacancies>>
+}
+
+entity employer_blocks {
+  userId : INTEGER <<PK FK users>>
+  employerId : INTEGER <<PK FK users>>
+}
+
+entity hidden_vacancies {
+  userId : INTEGER <<PK FK users>>
+  vacancyId : INTEGER <<PK FK vacancies>>
+}
+
+entity vacancy_moderation_log {
+  * id : INTEGER <<PK>>
+  --
+  vacancyId : INTEGER <<FK vacancies>>
+  moderationStatus, moderationComment
+}
+
+entity reports {
+  * id : INTEGER <<PK>>
+  --
+  reportedBy : INTEGER <<FK users>>
+  reportedUser : INTEGER <<FK users>>
+  reason, description, status
+}
+
+users ||--o{ vacancies : публикует
+users ||--o{ applications : соискатель
+vacancies ||--o{ applications : вакансия
+
+users ||--o{ messages : отправитель и получатель
+vacancies |o--o{ messages : контекст
+
+users ||--o{ saved_jobs : пользователь
+vacancies ||--o{ saved_jobs : вакансия
+
+users ||--o{ employer_blocks : обе стороны FK на users
+
+users ||--o{ hidden_vacancies : пользователь
+vacancies ||--o{ hidden_vacancies : скрытая вакансия
+
+vacancies ||--o{ vacancy_moderation_log : журнал
+
+users ||--o{ reports : автор и объект жалобы
+
+@enduml

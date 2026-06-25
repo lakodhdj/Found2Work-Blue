@@ -1,0 +1,45 @@
+@startuml use-case-found2work
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam usecase {
+  BackgroundColor #EEF7FF
+  BorderColor #2563eb
+}
+skinparam actor {
+  BackgroundColor #FFF8F0
+  BorderColor #b45309
+}
+title Рисунок 7 – Диаграмма вариантов использования (Found2Work)
+
+left to right direction
+
+actor "Незарегистрированный\nпосетитель" as Guest
+actor "Соискатель" as Seeker
+actor "Работодатель" as Employer
+actor "Администратор" as Admin
+actor "Технический\nадминистратор" as Ops
+
+rectangle "Found2Work" {
+  usecase (Просмотр лендинга\nи вакансий без входа) as UC_Public
+  usecase (Регистрация и вход) as UC_Auth
+  usecase (Кабинет соискателя:\nпоиск, отклики, избранное,\nпрофиль, чат) as UC_Seeker
+  usecase (Кабинет работодателя:\nвакансии, отклики,\nпрофиль, чат) as UC_Employer
+  usecase (Администрирование:\nмодерация, пользователи,\nстатистика) as UC_Admin
+  usecase (Развёртывание:\nDocker Compose,\nдомен и TLS / NPM) as UC_Ops
+}
+
+Guest --> UC_Public
+Guest --> UC_Auth
+
+Seeker --> UC_Auth
+Seeker --> UC_Seeker
+
+Employer --> UC_Auth
+Employer --> UC_Employer
+
+Admin --> UC_Auth
+Admin --> UC_Admin
+
+Ops --> UC_Ops
+
+@enduml

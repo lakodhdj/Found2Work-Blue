@@ -1,0 +1,31 @@
+@startuml sequence-application-found2work
+skinparam backgroundColor #FEFEFE
+skinparam sequenceMessageAlign center
+
+title Рисунок 30 – Диаграмма последовательностей: отклик соискателя на вакансию
+
+actor "Соискатель" as User
+participant "Интерфейс React\n(модальное окно вакансии)" as UI
+participant "REST API\nNode.js + Express" as API
+database "SQLite\n(data.db)" as DB
+
+User -> UI : Открывает детали вакансии,\nвводит сопроводительный текст
+UI -> UI : Проверка формы\n(непустое поле при отправке)
+
+UI -> API : POST /api/applications\napplication/json:\nuserId, vacancyId, coverLetter
+
+API -> DB : SELECT отклик\nпо userId и vacancyId
+DB --> API : строка или пусто
+
+alt отклик уже существует
+  API --> UI : 400 { error:\nAlready applied... }
+  UI --> User : Сообщение об ошибке
+else отклика ещё нет
+  API -> DB : INSERT INTO applications\n(status pending)
+  API -> DB : UPDATE vacancies\napplications = applications + 1
+  DB --> API : успех
+  API --> UI : 200 { success, application }
+  UI --> User : Уведомление об успехе,\nобновление списка откликов
+end
+
+@enduml

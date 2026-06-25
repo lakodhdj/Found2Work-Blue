@@ -1,0 +1,40 @@
+@startuml deployment-found2work
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam componentStyle rectangle
+skinparam roundcorner 8
+title Рисунок 6 – Диаграмма развертывания (продакшен: VPS, домен, TLS)
+
+actor "Пользователь" as U
+node "Браузер\n(HTTPS)" as B
+
+cloud "VPS" as VPS #E8F4FC {
+  together {
+    component "Nginx Proxy Manager\n(домен, Let's Encrypt / TLS)" as NPM #FFE8CC
+    frame "Docker Compose" #F5F5F5 {
+      component "Контейнер frontend\n(nginx: статика SPA + proxy /api)" as FE #E8F5E9
+      component "Контейнер backend\n(Node.js + Express, REST API)" as BE #E3F2FD
+      database "Файл SQLite\n(data.db в контейнере\nили томе)" as DB #FFF3E0
+    }
+  }
+}
+
+U --> B : работа с сайтом
+B --> NPM : **HTTPS :443**\n(имя домена)
+NPM --> FE : **HTTP** проксирование\nна опубликованный порт\nfrontend (напр. :8080)
+FE --> BE : запросы **/api/**\nвнутренняя сеть Docker
+BE --> DB : SQL-запросы
+
+note right of NPM
+  NPM завершает TLS и по правилам
+  Host / Path проксирует трафик
+  на стек приложения на том же VPS.
+end note
+
+note bottom of FE
+  Сборка React (Vite) отдаётся как статика;
+  маршрут /api проксируется на backend:5050
+  (как в docker/nginx конфигурации проекта).
+end note
+
+@enduml

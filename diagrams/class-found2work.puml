@@ -1,0 +1,82 @@
+@startuml class-found2work
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam classAttributeIconSize 0
+skinparam roundcorner 6
+
+title Рисунок 9 – Диаграмма классов (предметная область Found2Work)
+
+' Остальные таблицы (журнал модерации, жалобы, блокировки и т.д.) — на ER-рис. 8.
+
+class User <<entity>> {
+  id : Integer
+  email : String
+  password : String
+  name : String
+  type : String
+  city : String
+  phone : String
+  specialization : String
+  skills : String
+  companySize : String
+  industry : String
+  blocked : Boolean
+  createdAt : DateTime
+}
+
+class Vacancy <<entity>> {
+  id : Integer
+  employerId : Integer
+  title : String
+  description : String
+  salary : String
+  location : String
+  company : String
+  type : String
+  status : String
+  moderationStatus : String
+  views : Integer
+  createdAt : DateTime
+}
+
+class Application <<entity>> {
+  id : Integer
+  userId : Integer
+  vacancyId : Integer
+  coverLetter : String
+  status : String
+  createdAt : DateTime
+}
+
+class Message <<entity>> {
+  id : Integer
+  senderId : Integer
+  receiverId : Integer
+  vacancyId : Integer
+  text : String
+  createdAt : DateTime
+}
+
+class SavedJob <<entity>> {
+  id : Integer
+  userId : Integer
+  vacancyId : Integer
+  createdAt : DateTime
+}
+
+User "1" -- "0..*" Vacancy : публикует
+User "1" -- "0..*" Application : подаёт отклик
+Vacancy "1" -- "0..*" Application : получает
+
+User "1" -- "0..*" Message : отправитель / получатель
+Vacancy "0..1" -- "0..*" Message : контекст
+
+User "1" -- "0..*" SavedJob : избранное
+Vacancy "1" -- "0..*" SavedJob : в закладках
+
+note bottom of User
+  **type**: соискатель, работодатель, администратор.
+  В хранилище **password** — хеш (bcrypt).
+end note
+
+@enduml
